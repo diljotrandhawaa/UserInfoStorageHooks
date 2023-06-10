@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -45,25 +45,28 @@ const Login = (props) => {
     isValid: null
   })
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log('checking form validity')
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
-  //     );
-  //   }, 1000);
-  //   return () => {
-  //     clearTimeout(identifier);
-  //   };
-  // }, [enteredEmail, enteredPassword]);
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passIsValid } = passState;
+
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log('checking form validity')
+      setFormIsValid(
+        emailIsValid && passIsValid
+      );
+    }, 500);
+    return () => {
+      clearTimeout(identifier);
+    };
+  }, [emailIsValid, passIsValid]);
 
   const emailChangeHandler = (event) => {
     dispatchEmail({type: 'USER_INPUT', val: event.target.value})
     // setEnteredEmail(event.target.value);
 
-    setFormIsValid(
-      event.target.value.includes('@') && passState.value.trim().length > 6
-    );
+    // setFormIsValid(
+    //   event.target.value.includes('@') && passState.isValid
+    // );
 
   };
 
@@ -71,9 +74,9 @@ const Login = (props) => {
 
     dispatchPass({type: 'USER_PASS', val: event.target.value});
 
-    setFormIsValid(
-      emailState.value.includes('@') && event.target.value.trim().length > 6
-    );
+    // setFormIsValid(
+    //   emailState.isValid && event.target.value.trim().length > 6
+    // );
   };
 
   const validateEmailHandler = () => {
